@@ -4,15 +4,15 @@ PROJECT_NAME := go-graceful
 
 PHONY: run run-git-info run-prod build
 run:
-	go run cmd/main.go
+	APP_GIT_BUILD_VERSION=$(GIT_COMMIT) go run cmd/main.go
 
 run-git-info:
-	APP_VERSION=1 APP_GIT_BUILD_VERSION=$(GIT_COMMIT) mvn go run cmd/main.go
+	APP_GIT_BUILD_VERSION=$(GIT_COMMIT) mvn go run cmd/main.go
 
 build:
 	go build -o out/goserver cmd/main.go
 
 run-prod: build
-	APP_VERSION=2 APP_GIT_BUILD_VERSION=$(GIT_COMMIT) ./out/goserver -port=8082
+	APP_GIT_BUILD_VERSION=$(GIT_COMMIT) ./out/goserver -port=8082
 
 
