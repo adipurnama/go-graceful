@@ -2,17 +2,20 @@ SHELL := /bin/bash
 GIT_COMMIT := $(shell git rev-list -1 HEAD)
 PROJECT_NAME := go-graceful
 
-PHONY: run run-git-info run-prod build
+PHONY: run run-git-info run-prod build deps
+deps:
+	go mod tidy && go mod vendor
+
 run:
-	APP_GIT_BUILD_VERSION=$(GIT_COMMIT) go run cmd/main.go
+	APP_GIT_BUILD_VERSION=$(GIT_COMMIT) go run -mod=vendor cmd/std/main.go
 
 run-git-info:
-	APP_GIT_BUILD_VERSION=$(GIT_COMMIT) mvn go run cmd/main.go
+	APP_GIT_BUILD_VERSION=$(GIT_COMMIT) mvn go run -mod=vendor cmd/std/main.go
 
 build:
-	go build -o out/goserver cmd/main.go
+	go build -mod=vendor -o out/goserver-$(GIT_COMMMIT) cmd/std/main.go
 
 run-prod: build
-	APP_GIT_BUILD_VERSION=$(GIT_COMMIT) ./out/goserver -port=8082
+	APP_GIT_BUILD_VERSION=$(GIT_COMMIT) ./out/goserver-$(GIT_COMMIT) -port=8082
 
 
